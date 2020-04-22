@@ -12,7 +12,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.We
 # Chocolatey config
 choco feature enable -n allowGlobalConfirmation
 # Install my applications
-choco install vcredist-all brave hackfont neovim git jdk8 7zip lockhunter python python2 vscodium jetbrainstoolbox etcher everything kate vlc discord teamspeak teamviewer anydesk winscp audacity spotify telegram signal nodejs office365proplus
+choco install vcredist-all brave hackfont jetbrainsmono neovim git jdk8 7zip lockhunter python python2 vscodium jetbrainstoolbox etcher everything kate vlc discord teamspeak teamviewer anydesk winscp audacity spotify telegram signal nodejs office365proplus
 
 # Activate Office 365
 start "Applications/office_365_proplus_activator.cmd"
