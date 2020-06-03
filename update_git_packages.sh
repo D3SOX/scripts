@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # update yay hash cache
-yay -Y --gendb
+echo "Updating yay hash cache..."
+yay -Y --gendb > /dev/null
 
-read -p "Force update every git package? " -n 1 -r
+read -p "Force update every git package? [Y/n] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     # Single command
@@ -21,4 +22,5 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         yay -S ${package}
         echo
     done
+    echo "Finished updating git packages: ${packages[*]}"
 fi
