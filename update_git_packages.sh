@@ -19,7 +19,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     for package in $packages; do
         echo "Now updating $package"
         echo
-        yay -S ${package}
+        yay -S "$package"
         echo
     done
     echo "Finished updating git packages: ${packages[*]}"

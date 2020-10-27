@@ -24,9 +24,6 @@ Find out where a `.lnk` file points
 ## restart-*.sh
 Restart the corresponding desktop environment
 
-## setupmirrors.sh
-Update my arch repository mirrors
-
 ## smart-convert-m4a-mp3.sh
 Starting from the current folder, recursively convert all m4a files to mp3
 
