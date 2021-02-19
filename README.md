@@ -33,5 +33,8 @@ Copy the user's GTK configs to `/root`
 ## update_git_packages.sh
 Update all installed `-git` packages using `yay`
 
+## update-master.sh
+Update the default branch on a forked repository.
+
 ## validate_groups.sh
 See <https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid>
