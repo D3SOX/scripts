@@ -3,9 +3,6 @@ A repository of some small scripts I made or found somewhere
 
 # Scripts overview
 
-## easy_window_drag.ahk
-AutoHotkey script that adds KDE style window dragging on Windows (using Super Key)
-
 ## find_window.sh
 Utility to find the window class of a program by clicking on it
 
