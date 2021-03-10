@@ -21,6 +21,9 @@ Find out how much space systemd journals use
 ## lslnk.pl
 Find out where a `.lnk` file points
 
+## reset-pulseaudio.sh
+Reset PulseAudio configuration
+
 ## restart-*.sh
 Restart the corresponding desktop environment
 
