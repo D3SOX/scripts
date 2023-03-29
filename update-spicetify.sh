@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
-cd "$HOME/.config/spicetify/Extensions"
-for D in *; do [ -d "$D" ] && git -C "$D" pull; done
 
-cd "$HOME/.config/spicetify/Themes"
-for D in *; do [ -d "$D" ] && git -C "$D" pull; done
+pull_git_dirs () {
+    for D in *; do [ -d "$D/.git" ] && git -C "$D" pull; done
+}
 
-spicetify restore backup apply
+cd "$(dirname "$(spicetify -c)")/Extensions"
+pull_git_dirs
+cd "$(dirname "$(spicetify -c)")/Themes"
+pull_git_dirs
+cd "$(dirname "$(spicetify -c)")/CustomApps"
+pull_git_dirs
+
+spicetify apply -n
 exit 0
