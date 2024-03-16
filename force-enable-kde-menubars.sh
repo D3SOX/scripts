@@ -18,6 +18,7 @@ else
     # check if grep found nothing
     if [ $exit_code -eq 1 ]; then
         echo "No MenuBar=Disabled entries found"
+        rm -f "$cache_file"
         exit 0
     fi
 fi
@@ -27,6 +28,7 @@ matches=$(cat "$cache_file")
 # check if empty
 if [ -z "$matches" ]; then
     echo "No MenuBar=Disabled entries found"
+    rm -f "$cache_file"
     exit 0
 fi
 
