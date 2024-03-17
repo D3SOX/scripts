@@ -13,7 +13,7 @@ if [ -f "$cache_file" ]; then
 else
     # find new MenuBar=Disabled entries and cache
     echo "Searching for MenuBar=Disabled entries in ~/.config..."
-    grep -rnw "$config_dir" -e 'MenuBar=Disabled' 2>/dev/null > "$cache_file"
+    grep -rnw "$config_dir" -e '^MenuBar=Disabled$' 2>/dev/null > "$cache_file"
     exit_code=$?
     # check if grep found nothing
     if [ $exit_code -eq 1 ]; then
