@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
-paru -Qqem | grep kde | paru -S --rebuild --noconfirm -
-paru -Qqem | grep plasma | paru -S --rebuild --noconfirm -
-paru -Qqem | grep kwin | paru -S --rebuild --noconfirm -
+packages=$(paru -Qqem | grep kde)
+if [[ -n "$packages" ]]; then paru -S --rebuild --noconfirm $packages; fi
+
+packages=$(paru -Qqem | grep plasma)
+if [[ -n "$packages" ]]; then paru -S --rebuild --noconfirm $packages; fi
+
+packages=$(paru -Qqem | grep kwin)
+if [[ -n "$packages" ]]; then paru -S --rebuild --noconfirm $packages; fi
