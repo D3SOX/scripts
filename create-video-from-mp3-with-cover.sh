@@ -5,7 +5,6 @@ set -euo pipefail
 
 # Default values
 RESOLUTION="1920:1080"
-COVER_FILE=""
 
 usage() {
   cat << EOF
@@ -51,14 +50,21 @@ if [[ -z "${INPUT_MP3-}" || -z "${OUTPUT_MP4-}" ]]; then
 fi
 
 # Create a temporary cover file if not provided
-if [[ -z "$COVER_FILE" ]]; then
+if [[ -z "${COVER_FILE-}" ]]; then
   TMP_COVER=$(mktemp --suffix=".jpg")
   echo "Extracting cover art from '$INPUT_MP3' to '$TMP_COVER'..."
   ffmpeg -y -i "$INPUT_MP3" -an -c:v copy "$TMP_COVER"
   COVER_FILE="$TMP_COVER"
 fi
 
-# Build the video
+# Determine exact audio duration using ffprobe
+AUDIO_DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$INPUT_MP3")
+# Round duration to second-precision or keep as float
+# You can also format with printf if needed:
+# DURATION=$(printf "%.3f" "$AUDIO_DURATION")
+
+echo "Audio duration detected: ${AUDIO_DURATION}s"
+
 echo "Creating video '$OUTPUT_MP4' at resolution ${RESOLUTION}..."
 ffmpeg -y \
   -loop 1 -i "$COVER_FILE" \
@@ -66,7 +72,10 @@ ffmpeg -y \
   -c:v libx264 -tune stillimage \
   -vf "scale=${RESOLUTION}:force_original_aspect_ratio=decrease,pad=${RESOLUTION}:(ow-iw)/2:(oh-ih)/2" \
   -c:a libmp3lame -b:a 128k \
-  -shortest "$OUTPUT_MP4"
+  -t "$AUDIO_DURATION" \
+  -shortest \
+  -vsync vfr \
+  "$OUTPUT_MP4"
 
 # Clean up temporary cover
 if [[ -n "${TMP_COVER-}" && -f "$TMP_COVER" ]]; then
