@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-systemctl --user restart kiot lnxlink
+systemctl --user restart kiot
