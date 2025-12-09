@@ -31,12 +31,14 @@ except Exception:
 PY
 
 SKIP_FETCH=0
+USE_HTTPS=0
 for arg in "$@"; do
   case "$arg" in
     --no-fetch) SKIP_FETCH=1 ;;
+    --https) USE_HTTPS=1 ;;
     *)
       echo "Unknown argument: $arg" >&2
-      echo "Usage: $0 [--no-fetch]" >&2
+      echo "Usage: $0 [--no-fetch] [--https]" >&2
       exit 1
       ;;
   esac
@@ -47,24 +49,27 @@ mkdir -p "${BASE_DIR}"
 
 echo "Listing non-fork repositories for authenticated user (owned + member orgs)..."
 mapfile -t REPOS < <({
-  gh api -X GET /user/repos --paginate -F per_page=100 -f type=owner -q '.[] | select((.fork|not) and (.archived|not)) | "\(.full_name) \(.ssh_url)"'
-  gh api -X GET /user/repos --paginate -F per_page=100 -f type=member -q '.[] | select((.fork|not) and (.archived|not)) | "\(.full_name) \(.ssh_url)"'
+  gh api -X GET /user/repos --paginate -F per_page=100 -f type=owner -q '.[] | select((.fork|not) and (.archived|not)) | "\(.full_name)|\(.ssh_url)|\(.clone_url)"'
+  gh api -X GET /user/repos --paginate -F per_page=100 -f type=member -q '.[] | select((.fork|not) and (.archived|not)) | "\(.full_name)|\(.ssh_url)|\(.clone_url)"'
 } | sort -u)
 
 echo "Found ${#REPOS[@]} repositories."
 
 for entry in "${REPOS[@]}"; do
-  name_with_owner="${entry%% *}"
-  ssh_url="${entry#* }"
+  IFS="|" read -r name_with_owner ssh_url https_url <<<"${entry}"
   repo_name="${name_with_owner#*/}"
   repo_dir="${BASE_DIR}/${repo_name}"
+  clone_url="${ssh_url}"
+  if [ "${USE_HTTPS}" -eq 1 ]; then
+    clone_url="${https_url}"
+  fi
 
   echo
   echo "=== ${name_with_owner} ==="
 
   if [ ! -d "${repo_dir}/.git" ]; then
     echo "Cloning into ${repo_dir}..."
-    git clone "${ssh_url}" "${repo_dir}"
+    git clone "${clone_url}" "${repo_dir}"
   elif [ "${SKIP_FETCH}" -eq 0 ]; then
     echo "Repo already cloned at ${repo_dir}, fetching latest..."
     git -C "${repo_dir}" fetch --all --prune
