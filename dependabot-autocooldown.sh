@@ -77,9 +77,14 @@ for entry in "${REPOS[@]}"; do
     echo "Repo already cloned at ${repo_dir}, skipping fetch (per --no-fetch)."
   fi
 
-  dependabot_file="${repo_dir}/.github/dependabot.yml"
-  if [ ! -f "${dependabot_file}" ]; then
-    echo "No .github/dependabot.yml found; skipping."
+  dependabot_yml="${repo_dir}/.github/dependabot.yml"
+  dependabot_yaml="${repo_dir}/.github/dependabot.yaml"
+  if [ -f "${dependabot_yml}" ]; then
+    dependabot_file="${dependabot_yml}"
+  elif [ -f "${dependabot_yaml}" ]; then
+    dependabot_file="${dependabot_yaml}"
+  else
+    echo "No .github/dependabot.yml or .github/dependabot.yaml found; skipping."
     continue
   fi
 
@@ -146,7 +151,7 @@ for entry in "${REPOS[@]}"; do
   repo_dir="${BASE_DIR}/${repo_name}"
   [ -d "${repo_dir}/.git" ] || continue
 
-  commit_line=$(git -C "${repo_dir}" log -1 --oneline --grep "${COMMIT_TITLE}" -- .github/dependabot.yml || true)
+  commit_line=$(git -C "${repo_dir}" log -1 --oneline --grep "${COMMIT_TITLE}" -- .github/dependabot.yml .github/dependabot.yaml || true)
   if [ -z "${commit_line}" ]; then
     continue
   fi
@@ -167,7 +172,7 @@ for entry in "${REPOS[@]}"; do
 
   echo
   echo "${name_with_owner}: ${commit_line}"
-  git -C "${repo_dir}" show -w --stat --patch --color=always -- .github/dependabot.yml
+  git -C "${repo_dir}" show -w --stat --patch --color=always -- .github/dependabot.yml .github/dependabot.yaml
   if [ -t 0 ]; then
     read -r -p "Push this commit? [y/N] " reply || true
     if [[ "${reply:-}" =~ ^[Yy]$ ]]; then
