@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Config
-BASE_DIR="/home/nico/ensure-gh-dependabot-cooldown/dependabot-autocooldown-repos"
+BASE_DIR="$HOME/dependabot-autocooldown-repos"
 COMMIT_TITLE="ci: configure dependency cooldown"
 COMMIT_BODY="See: https://blog.yossarian.net/2025/11/21/We-should-all-be-using-dependency-cooldowns"
 
